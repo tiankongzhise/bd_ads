@@ -1,7 +1,7 @@
 # from src import db 
 # from src import oauth 
 from src.db import OauthDb,BdAuthTokenTable
-from src.oauth import BaiduOauthClient
+from src.oauth import BaiduOauthService
 
 import os
 
@@ -9,10 +9,10 @@ import os
 def test_get_user_info(uese_id):
     # 创建数据库连接
     db_client = OauthDb()
-    with db_client.get_db() as session:
+    with db_client.get_session() as session:
 
         # 创建OauthClient实例
-        oauth_client = BaiduOauthClient(
+        oauth_client = BaiduOauthService(
             app_id=os.getenv("APP_ID"),
             secret_key=os.getenv("SECRET_KEY"),
         )

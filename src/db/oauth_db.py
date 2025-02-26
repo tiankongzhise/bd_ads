@@ -137,7 +137,7 @@ class OauthDb(object):
 
     # 添加会话管理方法
     @contextmanager
-    def get_db(self) ->  Generator[Session, None, None]:
+    def get_session(self) ->  Generator[Session, None, None]:
         db = self.SessionLocal()
         try:
             yield db
@@ -234,7 +234,8 @@ class OauthDb(object):
                     updated_count = (
                         session.add(model(**data))
                     )
-                    logger.error(f'新增账户id:{data['userId']}的Oauth信息')
+                    # logger.error(f'新增账户id:{data['userId']}的Oauth信息')
+                    print(f'新增账户id:{data['userId']}的Oauth信息')
                 else:
                     # 执行更新
                     updated_count = (
@@ -242,7 +243,8 @@ class OauthDb(object):
                         .filter_by(**condition)
                         .update(update_data, synchronize_session=False)
                     )
-                    logger.error(f'更新账户id:{data['userId']}的Oauth信息')
+                    # logger.error(f'更新账户id:{data['userId']}的Oauth信息')
+                    print(f'更新账户id:{data['userId']}的Oauth信息')
                 session.commit()
                 return updated_count
             except Exception as e:

@@ -1,7 +1,7 @@
-from base import BaseAPIClient
+from .base import BaseAPIClient
 from typing import Dict
 
-class BaiduContentAPIClient(BaseAPIClient):
+class BaiduCampaignServiceClient(BaseAPIClient):
     def __init__(self, access_token: str, user_name:str,**kwargs):
         super().__init__(
             base_url="https://api.baidu.com/json/sms/service/CampaignService/",  # 根据实际文档替换

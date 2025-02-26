@@ -10,6 +10,7 @@ class APIClientError(Exception):
 
 
 class BaseAPIClient:
+    _logger = APILogger(level=LogLevel.BASIC)
     def __init__(
         self,
         base_url: str,
@@ -25,14 +26,15 @@ class BaseAPIClient:
         self.user_name = user_name
         self.timeout = timeout
         self.session = session or requests.Session()
-        self.logger = logger or APILogger(level=LogLevel.BASIC)
+        _logger = APILogger(level=LogLevel.BASIC)
         
         # 公共请求头配置
         self.session.headers.update({
             'userName':self.user_name,
             'accessToken':self.access_token,
+            'Content-Type':'application/json;charset=utf-8'
         })
-    @APILogger.log_request
+    @_logger.log_request
     def _request(
         self,
         method: str,

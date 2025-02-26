@@ -1,7 +1,7 @@
-from .main import BaiduOauthClient
+from .main import BaiduOauthService
 
 
 
 __all__ = [
-    'BaiduOauthClient'
+    'BaiduOauthService'
 ]

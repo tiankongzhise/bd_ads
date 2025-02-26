@@ -1,7 +1,7 @@
 from .base import BaseAPIClient
 from typing import Dict, Any, Optional
 
-class BaiduOauthClient(BaseAPIClient):
+class BaiduOauthService(BaseAPIClient):
     def __init__(self, app_id: str, secret_key:str,**kwargs):
         super().__init__(
             base_url="https://u.baidu.com/oauth/",  # 根据实际文档替换
