@@ -22,16 +22,13 @@ class BaseAPIClient:
         **kwargs
     ):
         self.base_url = base_url.rstrip('/')
-        self.access_token = access_token
-        self.user_name = user_name
+        self.headers = {'header':{'userName':user_name,'accessToken':access_token}}
         self.timeout = timeout
         self.session = session or requests.Session()
         _logger = APILogger(level=LogLevel.BASIC)
         
         # 公共请求头配置
         self.session.headers.update({
-            'userName':self.user_name,
-            'accessToken':self.access_token,
             'Content-Type':'application/json;charset=utf-8'
         })
     @_logger.log_request
@@ -64,9 +61,15 @@ class BaseAPIClient:
             raise APIClientError(f"网络请求异常: {e}") from e
 
     def get(self, endpoint: str, params: Optional[Dict] = None) -> Dict:
+        if params:
+            params = {**self.headers, "body": params}
         return self._request("GET", endpoint, params=params)
 
     def post(self, endpoint: str, data: Optional[Dict] = None) -> Dict:
-        return self._request("POST", endpoint, json=data)
+        if data:
+            params = {**self.headers, "body": data}
+        else:
+            params = None
+        return self._request("POST", endpoint, json=params)
 
     # 可根据需要添加 put/patch/delete 等方法
