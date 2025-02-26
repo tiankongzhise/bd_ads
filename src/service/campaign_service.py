@@ -14,4 +14,7 @@ class BaiduCampaignServiceClient(BaseAPIClient):
         """新增推广计划"""
         return self.post("/addCampaign", data=content_data)
     
+    def get_campaign(self, content_data: Dict) -> Dict:
+        """获取推广计划列表"""
+        return self.post("/getCampaign", data=content_data)
     

@@ -26,7 +26,7 @@ class BaiduOauthClient(object):
         with self.db.get_session() as session:
             return session.query(BdAuthTokenTable).filter(BdAuthTokenTable.userId == user_id).scalar()
 
-    def create_oauth_client(self,user_name:str,service_mode:Type[BaseAPIClient],user_id:str|None = None,force_refresh:bool = False):
+    def create_oauth_client(self,user_name:str,service_mode:Type[BaseAPIClient],user_id:str|None = None,force_refresh:bool = False)->Type[BaseAPIClient]:
         if user_id is None:
             user_id = self.user_id
         oauth_info = self.get_oauth_info(user_id)

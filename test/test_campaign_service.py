@@ -1,4 +1,3 @@
-from src.db import OauthDb,BdAuthTokenTable
 from src.tool import BaiduOauthClient
 from src.service import BaiduCampaignServiceClient
 
@@ -15,12 +14,29 @@ class TestBaiduCampaignServiceClient(object):
             'campaignTypes':[
                 {
                     "campaignName":'测试',
-                    # "pause":True,
+                    "pause":True,
                     'marketingTargetId':0,
+                    'businessPointId':99,
+                    'campaignBidType':1,
+                    'campaignOcpcBidType':1,
+                    'campaignOcpcBid':50,
+                    'campaignTransTypes':[3,18,30,79],
+                    'campaignDeepTransTypes':[75]
             }
             ]
         }
         return self.client.add_campaign(query_params)
+    
+    def test_get_campaign(self,query_params:dict|None = None):
+        if query_params is None:
+            query_params = {
+                'campaignFields':[
+                    'campaignId',
+                    'campaignName'
+                ],
+                'campaignIds':[]
+            }
+        return self.client.get_campaign(query_params)
 
 
 if __name__ == "__main__":
