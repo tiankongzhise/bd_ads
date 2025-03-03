@@ -364,3 +364,7 @@ class ServiceTool(object):
         params_list = self.chunk_list(creative_params,size=3000)
         return [{'creativeTypes':params} for params in params_list]
     
+    
+    def update_center_info(self,center_id:str,) -> dict:
+        """获取中心信息"""
+        return self.post("/getCenterInfo", data={'centerId':center_id})
