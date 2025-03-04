@@ -13,4 +13,5 @@ dependencies = [
     "requests>=2.32.3",
     "setuptools>=75.8.2",
     "sqlalchemy>=2.0.38",
+    "tqdm>=4.67.1",
 ]
