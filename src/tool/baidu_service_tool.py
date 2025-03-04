@@ -1,4 +1,8 @@
-from math import nan,isnan
+from math import isnan
+from typing import Type,Literal
+from src.service.base import BaseAPIClient
+from src.db import BdAdMaterialTransferTable,BdServiceDb
+
 class ServiceTool(object):
 
     def __init__(self):
@@ -54,7 +58,7 @@ class ServiceTool(object):
         try:
             if isinstance(value,float) and isnan(value):
                 return True
-        except:
+        except:  # noqa: E722
             pass
 
 
@@ -364,7 +368,87 @@ class ServiceTool(object):
         params_list = self.chunk_list(creative_params,size=3000)
         return [{'creativeTypes':params} for params in params_list]
     
+    @staticmethod
+    def update_center_info(center_id:str,) -> dict:
+        from src.service import BaiduMccServiceClient
+        from src.db import BdAdCenterBindTable,BdServiceDb
+        from .baidu_oauth_tool import BaiduOauthClient
+        oauth_client = BaiduOauthClient(center_id)
+        mcc_client = oauth_client.create_oauth_client('BDCC-金蛛账号中心',BaiduMccServiceClient)
+        queryParam = {
+            'mccId':center_id
+        }
+        rsp = mcc_client.get_user_list(queryParam)
+        if rsp['header']['desc'] != 'success':
+            raise Exception(f'获取账户中心信息失败:{rsp}')
+        user_list = rsp['body']['data']
+        result = []
+        for user_info in user_list:
+            result.append({
+                'center_id':user_info['mccid'],
+                'center_name':user_info['fatname'],
+                'user_id':user_info['userid'],
+                'user_name':user_info['username'],
+            })
+        db = BdServiceDb()
+        with db.get_session() as session:
+            try:
+                session.bulk_insert_mappings(BdAdCenterBindTable,result)
+                session.commit()
+                print(f'更新{center_id}账户中心信息成功')
+            except Exception as e:
+                session.rollback()
+                print(f'更新账户中心信息失败:{e}')
+                raise e
+    @staticmethod        
+    def get_user_info(mcc_id:str) -> dict:
+        from src.db import BdAdCenterBindTable,BdServiceDb
+        db = BdServiceDb()
+        with db.get_session() as session:
+            rsp = session.query(BdAdCenterBindTable).filter(BdAdCenterBindTable.center_id == mcc_id).all()
+            result = {mcc_id:{}}
+            for item in rsp:
+                result[mcc_id].update({
+                    item.user_id:item.user_name,
+                    item.user_name:item.user_id
+                })
+            
+        return result
     
-    def update_center_info(self,center_id:str,) -> dict:
-        """获取中心信息"""
-        return self.post("/getCenterInfo", data={'centerId':center_id})
+    @staticmethod
+    def get_category_list(client:Type[BaseAPIClient],type_class:Literal['产品','文章','问答','人员','案例'],type_map:dict):
+        queryParam = {
+            'type':type_map[type_class],
+            'pageSize':500,
+            'pageNum':1
+        }
+        rsp = client.get_category_list(queryParam)
+        if rsp['header']['desc'] != 'success':
+            raise Exception(f'获取分类列表失败:{rsp}')
+        category_list = rsp['body']['data'][0]['list']
+        result = {}
+        for category_info in category_list:
+            result[category_info['categoryId']] = {
+                'name':category_info['name'],
+                'type':category_info['type']
+            }
+        return result
+    @staticmethod
+    def get_migration_map(migrate_type:str,db_client:BdServiceDb|None = None)->dict:
+        result = {}
+        if db_client is None:
+            client = BdServiceDb()
+        with client.get_session() as session:
+            rsp = session.query(BdAdMaterialTransferTable).filter(BdAdMaterialTransferTable.material_class == migrate_type).all()
+        for item in rsp:
+            if item.migrate_status == '成功':
+                if result.get(item.material_id) is None:
+                    result.update({
+                        item.material_id:{item.target_user_id:item.target_material_id}
+                    })
+                else:
+                    result[item.material_id].update({
+                            item.target_user_id:item.target_material_id
+                        })
+        return result
+

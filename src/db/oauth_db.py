@@ -1,5 +1,4 @@
 # 标准库模块
-from datetime import datetime
 import os
 import logging
 from typing import Generator
@@ -12,11 +11,9 @@ from sqlalchemy import (
     # 表结构约束
     PrimaryKeyConstraint, UniqueConstraint,
     # 函数与SQL表达式
-    func, text,
-    # 引擎与连接
-    create_engine,
+    func, create_engine,
     # ORM 基础组件
-    Column, inspect
+    Column
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -25,7 +22,6 @@ from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.dialects.mysql import INTEGER  # MySQL 大整数类型
 
 # 异常类
-from sqlalchemy.exc import IntegrityError
 
 # 加在配置文件
 from dotenv import load_dotenv

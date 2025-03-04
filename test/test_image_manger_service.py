@@ -24,7 +24,7 @@ class TestBaiduImageManageServiceClient(object):
         if query_params is None:
             query_params = {
                 'pageNo':1,
-                'pageSize':1000
+                'pageSize':999
             }
         return self.client.get_image_list(query_params)
     
@@ -41,9 +41,10 @@ class TestBaiduImageManageServiceClient(object):
 if __name__ == "__main__":
     uese_id = '64339991'
     source_user_name = '金蛛教育'
-    target_user_name = '金蛛-迷茫(低学历)'
+    target_user_name = '金蛛-北大青鸟'
     img_url = 'https://jmy-pic.baidu.com/0/pic/14cb89a80e88c8dfe673e0806de3a96f.jpg'
     source_client = TestBaiduImageManageServiceClient(uese_id,source_user_name)
     target_client = TestBaiduImageManageServiceClient(uese_id,target_user_name)
-    rsp = source_client.test_get_image_list()
-    print(rsp)
+    # source_rsp = source_client.test_get_image_list()
+    targer_rsp = target_client.test_get_image_list()
+    print(targer_rsp)

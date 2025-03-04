@@ -1,7 +1,6 @@
 # 标准库模块
 from datetime import datetime
 import os
-import logging
 from typing import Generator
 from contextlib import contextmanager
 
@@ -9,24 +8,20 @@ from contextlib import contextmanager
 # SQLAlchemy 核心及ORM组件
 from sqlalchemy import (
     # 数据类型
-    Integer, String, Text, DateTime, JSON,
+    Integer, String, DateTime, JSON,
     # 表结构约束
-    PrimaryKeyConstraint, UniqueConstraint,
+    UniqueConstraint,
     # 函数与SQL表达式
-    func, text,
-    # 引擎与连接
-    create_engine,
+    func, create_engine,
     # ORM 基础组件
-    Column, inspect
+    Column
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 
 # 方言特定类型（按需使用）
-from sqlalchemy.dialects.mysql import INTEGER  # MySQL 大整数类型
 
 # 异常类
-from sqlalchemy.exc import IntegrityError
 
 # 加在配置文件
 from dotenv import load_dotenv
@@ -39,6 +34,7 @@ class BdAdMaterialTransferTable(Base):
     __tablename__ = 'ads_material_transfer'  # 表名
     
     id = Column(Integer, primary_key=True, autoincrement=True, comment='主键ID')
+    material_class = Column(String(64), nullable=False, comment='物料类型')
     source_user_id = Column(String(64), nullable=False, comment='来源用户ID')
     material_id = Column(String(64), nullable=True, comment='物料ID')
     material_url = Column(String(512), nullable=True, comment='物料URL')
