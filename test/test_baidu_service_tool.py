@@ -20,5 +20,5 @@ if __name__ == '__main__':
     mcc_id = '64339991'
     test_service_tool = TestServiceTool(mcc_id)
     # test_service_tool.test_update_center_info()
-    # test_service_tool.test_get_user_info()
-    test_service_tool.test_get_migration_map()
+    test_service_tool.test_get_user_info()
+    # test_service_tool.test_get_migration_map()
