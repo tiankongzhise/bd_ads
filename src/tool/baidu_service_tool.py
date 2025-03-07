@@ -369,7 +369,7 @@ class ServiceTool(object):
         return [{'creativeTypes':params} for params in params_list]
     
     @staticmethod
-    def update_center_info(center_id:str,) -> dict:
+    def update_center_info(center_id:str) -> dict:
         from src.service import BaiduMccServiceClient
         from src.db import BdAdCenterBindTable,BdServiceDb
         from .baidu_oauth_tool import BaiduOauthClient
@@ -382,15 +382,30 @@ class ServiceTool(object):
         if rsp['header']['desc'] != 'success':
             raise Exception(f'获取账户中心信息失败:{rsp}')
         user_list = rsp['body']['data']
+        
         result = []
+        db = BdServiceDb()
+        with db.get_session() as session:
+            try:
+                db_user_info = session.query(BdAdCenterBindTable).filter(BdAdCenterBindTable.center_id == center_id).all()
+            except Exception as e:
+                raise f'更新账户中心信息失败，原因是无法从数据库获取历史中心数据，数据库报错:{e}'
+        temp_list = []
+        for temp in db_user_info:
+            temp_list.append(int(temp.user_id))
+            
+        print(f'temp_list:{temp_list}')
+        
         for user_info in user_list:
+            if user_info['userid'] in temp_list:
+                continue
             result.append({
                 'center_id':user_info['mccid'],
                 'center_name':user_info['fatname'],
                 'user_id':user_info['userid'],
                 'user_name':user_info['username'],
             })
-        db = BdServiceDb()
+
         with db.get_session() as session:
             try:
                 session.bulk_insert_mappings(BdAdCenterBindTable,result)
@@ -414,6 +429,16 @@ class ServiceTool(object):
                 })
             
         return result
+    @staticmethod   
+    def get_user_list(mcc_id:str) -> list:
+        '''返回账户管理中心所管理的全部账户名称'''
+        from src.db import BdAdCenterBindTable,BdServiceDb
+        db = BdServiceDb()
+        with db.get_session() as session:
+            rsp = session.query(BdAdCenterBindTable).filter(BdAdCenterBindTable.center_id == mcc_id).all()
+            result = [item.user_name for item in rsp]
+            return result
+        
     
     @staticmethod
     def get_category_list(client:Type[BaseAPIClient],type_class:Literal['产品','文章','问答','人员','案例'],type_map:dict):

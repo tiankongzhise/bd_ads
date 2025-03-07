@@ -24,12 +24,14 @@ class BaiduOauthClient(object):
             user_id = self.user_id
 
         with self.db.get_session() as session:
-            return session.query(BdAuthTokenTable).filter(BdAuthTokenTable.userId == user_id).scalar()
+            return session.query(BdAuthTokenTable).filter(BdAuthTokenTable.userId == user_id).first()
 
     def create_oauth_client(self,user_name:str,service_mode:Type[BaseAPIClient],user_id:str|None = None,force_refresh:bool = False)->Type[BaseAPIClient]:
         if user_id is None:
             user_id = self.user_id
         oauth_info = self.get_oauth_info(user_id)
+        if oauth_info is None:
+            raise Exception(f'账户中心id{user_id}并未有权限信息，请先进行授权')
 
         if (not self.is_token_expiring_soon(oauth_info.expiresTime)) and (not force_refresh) :
             return service_mode(access_token=oauth_info.accessToken,user_name=user_name)
@@ -86,5 +88,3 @@ class BaiduOauthClient(object):
         time_difference = expiry_time - current_time
         return time_difference < timedelta(hours=2)
 
-if __name__ == '__main__':
-    print(get_oauth_info('64339991'))

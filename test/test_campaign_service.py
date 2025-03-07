@@ -1,7 +1,6 @@
 from src.tool import BaiduOauthClient
 from src.service import BaiduCampaignServiceClient
 
-import os
 
 class TestBaiduCampaignServiceClient(object):
     def __init__(self,user_id:str,user_name:str):
