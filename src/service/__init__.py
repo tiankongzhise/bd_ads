@@ -14,6 +14,7 @@ from .material_center_bind_service import BaiduMaterialCenterBindQueryServiceCli
 from .image_manage_service import BaiduImageManageServiceClient
 from .share_material_service import BaiduWtShareMaterialServiceClient
 from .advanced_segment_service import BaiduAdvancedSegmentServiceClient
+from .leads_notice_service import BaiduLeadsNoticeServiceClient
 
 __all__ = [
     'BaiduMccServiceClient',
@@ -35,5 +36,6 @@ __all__ = [
     'BaiduMaterialBindModServiceServiceClient',
     'BaiduImageManageServiceClient',
     'BaiduWtShareMaterialServiceClient',
-    'BaiduAdvancedSegmentServiceClient'
+    'BaiduAdvancedSegmentServiceClient',
+    'BaiduLeadsNoticeServiceClient'
 ]
