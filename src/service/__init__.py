@@ -15,6 +15,7 @@ from .image_manage_service import BaiduImageManageServiceClient
 from .share_material_service import BaiduWtShareMaterialServiceClient
 from .advanced_segment_service import BaiduAdvancedSegmentServiceClient
 from .leads_notice_service import BaiduLeadsNoticeServiceClient
+from .open_api_report_service import BaiduOpenApiReportServiceClient
 
 __all__ = [
     'BaiduMccServiceClient',
@@ -37,5 +38,6 @@ __all__ = [
     'BaiduImageManageServiceClient',
     'BaiduWtShareMaterialServiceClient',
     'BaiduAdvancedSegmentServiceClient',
-    'BaiduLeadsNoticeServiceClient'
+    'BaiduLeadsNoticeServiceClient',
+    'BaiduOpenApiReportServiceClient'
 ]

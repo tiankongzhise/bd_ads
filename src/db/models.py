@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, JSON,inspect
+from sqlalchemy import Column, Integer, String, DateTime, Text, JSON,inspect,Date,UniqueConstraint,func,DECIMAL
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
@@ -37,3 +37,30 @@ class LeadsNoticePush(Base):
         }
     def __repr__(self):
         return f"<LeadsNoticePush(id={self.id}, clueId={self.clueId})>"
+
+class BaiduAccoutCostRrport(Base):
+    """百度账户日消费数据"""
+    __tablename__ = 'baidu_accout_cost_report'
+    __table_args__ = (
+        UniqueConstraint('date', 'userId', name='uq_date_user_id'),
+        {'schema': 'baidu_source_data'})
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    date = Column(Date, default=datetime.now, comment='日期时间')
+    userName = Column(String(255), comment='用户名')
+    userId = Column(Integer, comment='用户id')
+    product = Column(String(255), comment='投放渠道')
+    impression = Column(Integer, comment='展现量')
+    click = Column(Integer, comment='点击量')
+    cost = Column(DECIMAL(8,2), comment='消费金额')
+    created_at = Column(DateTime,default=func.now(),comment='记录创建时间')
+    updated_at = Column(DateTime,onupdate=func.now(),comment='记录更新时间')
+    
+    def to_dict(self):
+        return {
+            c.key: getattr(self, c.key)
+            for c in inspect(self).mapper.column_attrs
+        }
+    def __repr__(self):
+        return f"<BaiduAccoutCostRrport(userId={self.userId}, userName={self.userName},date={self.date},cost = {self.cost},created_at={self.created_at})>"
+    
