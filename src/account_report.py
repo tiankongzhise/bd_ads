@@ -2,9 +2,9 @@ from src.service import BaiduOpenApiReportServiceClient
 from src.tool import BaiduOauthClient
 from src.db.datebase import get_db,engine
 from src.db.models import BaiduAccoutCostRrport,Base
-
-
-
+from tkzs_bd_db_tool import get_session
+from tkzs_bd_db_tool import models
+from datetime import date,timedelta
 class BaiduAccountReportClient(object):
     def __init__(self, center_id: str, user_name:str,**kwargs):
         oauth_client = BaiduOauthClient(user_id=center_id)
@@ -58,9 +58,17 @@ if __name__ == '__main__':
     except Exception as e:
         raise f'BaiduAccountReportClient.get_account_cost_report创建数据库失败，原因为{e}'
     center_id = '64339991'
-    user_name_list = ['金蛛-新账户1','金蛛-北大青鸟','金蛛-BCSP','金蛛-新账户5']
-    start_date = '2025-02-20'
-    end_date = '2025-03-16'
+    user_name_list = ['金蛛-新账户1','金蛛-北大青鸟','金蛛-BCSP','金蛛-新账户5','金蛛-新账户2']
+    with get_session() as session:
+        latest_date = session.query(models.BaiduAccoutCostRrport.date).order_by(models.BaiduAccoutCostRrport.date.desc()).first()
+        print(f'最新日期:{latest_date}')
+    yesterday = date.today() - timedelta(days=1)
+    yesterday_str = yesterday.strftime('%Y-%m-%d')
+    print('请输入开始日期（格式为YYYY-MM-DD）:')
+    
+    start_date = input() or yesterday_str
+    print('请输入结束日期（格式为YYYY-MM-DD）:')
+    end_date = input() or yesterday_str
     for user_name in user_name_list:
         client = BaiduAccountReportClient(center_id=center_id,user_name=user_name)
         client.get_account_cost_report(start_date=start_date,end_date=end_date)
