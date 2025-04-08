@@ -8,7 +8,8 @@ class ServiceTool(object):
     def __init__(self):
         self.business_point_map = {
             '品牌':99,
-            '软件开发':201904057005
+            '软件开发':201904057005,
+            '网络运维培训':201904038013008
         }
         self.define_pc_final_url = 'https://www.jinzhuedu.org'
         self.define_mobile_final_url = 'https://m.jinzhuedu.org'

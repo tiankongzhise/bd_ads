@@ -16,7 +16,7 @@ class BaseAPIClient:
         base_url: str,
         access_token: str,
         user_name:str,
-        timeout: int = 10,
+        timeout: int = 120,
         session: Optional[requests.Session] = None,
         logger: Optional[APILogger] = None,
         **kwargs
@@ -62,7 +62,7 @@ class BaseAPIClient:
 
     def get(self, endpoint: str, params: Optional[Dict] = None) -> Dict:
         if params:
-            params = {**self.headers, "body": params}
+            params = {**self.headers, "body": params}   
         return self._request("GET", endpoint, params=params)
 
     def post(self, endpoint: str, data: Optional[Dict] = None) -> Dict:

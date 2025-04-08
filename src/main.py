@@ -202,6 +202,8 @@ class BaiduBuildAds(object):
                 for item in rsp['body']['data']:
                     self.campaign_map[item['campaignName']] = item['campaignId']
                     self.campaign_map[item['campaignId']] = item['campaignName']
+        if self.fail['计划']:
+            print("计划失败:{self.fail['计划']}")
         
     def _adgroup_fail_message(self,params,rsp_fail_msg:dict) -> dict:
         fail_index = rsp_fail_msg['id']
@@ -234,6 +236,8 @@ class BaiduBuildAds(object):
             if rsp['body']['data']:
                 for item in rsp['body']['data']:
                     self._update_adgroup_map(item)
+        if self.fail['单元']:
+            print(f'单元失败:{self.fail["单元"]}')
     def _upadte_keyword_success(self,keyword_info_list:dict)->None:
         firsr_keyword_info = keyword_info_list[0]
         last_keyword_info = keyword_info_list[-1]

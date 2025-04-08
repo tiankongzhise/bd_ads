@@ -156,9 +156,9 @@ class UserLeadsNoticeClient(object):
 
 if __name__ == '__main__':
     center_id = '64339991'
-    user_name = '金蛛-新账户1'
-    start_date = '2025-03-15 00:00:00'
-    end_date = '2025-03-17 23:59:59'
+    user_name = '金蛛-北大青鸟'
+    start_date = '2025-03-18 00:00:00'
+    end_date = '2025-03-30 23:59:59'
 
     # user_leads_notice_client = UserLeadsNoticeClient(center_id,user_name)
     # user_leads_notice_client.login('金蛛-新账户1')
